@@ -19,10 +19,15 @@ const app = express();
 //////////////////////////
 const gifController = async (req, res) => {
     try {
-        const response = await fetch(`https://api.giphy.com/v1/gifs/trending?limit=3&rating=g&api_key=${process.env.APIKEY}`)
+        const searchTerm = req.query.q;
+        const url = searchTerm
+            ? `https://api.giphy.com/v1/gifs/search?limit=3&rating=g&api_key=${process.env.APIKEY}&q=${searchTerm}`
+            : `https://api.giphy.com/v1/gifs/trending?limit=3&rating=g&api_key=${process.env.APIKEY}`;
+        const response = await fetch(url);
         const data = await response.json();
         res.json(data)
-    } catch (error) {
+    }
+    catch (error) {
         res.status(503).json(error)
     }
 };
